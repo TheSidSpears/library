@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
@@ -18,7 +19,7 @@ class BookController extends Controller
     {
         $books = Book::query();
 
-        if ($request->name){
+        if ($request->name) {
             $books->where('name', 'like', "%{$request->name}%");
         }
 
@@ -30,10 +31,26 @@ class BookController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * @throws \Throwable
      */
     public function store(Request $request)
     {
-        //
+        $book = new Book();
+        $data = $request->only($book->getFillable());
+
+        $validator = Validator::make($data, [
+            'name'         => 'required|max:255',
+            'description'  => 'required|max:2000',
+            'publish_year' => 'required|date_format:Y',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['message' => $validator->errors()]);
+        }
+
+        $book->fill($data)->saveOrFail();
+
+        return response('', 201);
     }
 
     /**
@@ -44,7 +61,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return response($book);
     }
 
     /**
@@ -67,6 +84,9 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        // todo так же удалять связи с авторами
+        // todo можно сделать soft_delete
+        $isDeleted = $book->delete();
+        return response('', $isDeleted ? 200 : 404);
     }
 }
