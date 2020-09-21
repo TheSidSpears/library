@@ -73,7 +73,21 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $data = $request->only($book->getFillable());
+
+        $validator = Validator::make($data, [
+            'name'         => 'max:255',
+            'description'  => 'max:2000',
+            'publish_year' => 'date_format:Y',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['message' => $validator->errors()]);
+        }
+
+        $book->fill($data)->saveOrFail();
+
+        return response('', 204);
     }
 
     /**
@@ -87,6 +101,6 @@ class BookController extends Controller
         // todo так же удалять связи с авторами
         // todo можно сделать soft_delete
         $isDeleted = $book->delete();
-        return response('', $isDeleted ? 200 : 404);
+        return response('', $isDeleted ? 204 : 404);
     }
 }
