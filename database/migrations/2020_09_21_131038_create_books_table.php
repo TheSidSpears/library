@@ -18,6 +18,7 @@ class CreateBooksTable extends Migration
             $table->string('name');
             $table->string('description',2000);
             $table->year('publish_year');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -107,8 +107,9 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author): Response
     {
-        // todo так же удалять связи с книгами
-        // todo можно сделать soft_delete
         $isDeleted = $author->delete();
-        return response('', $isDeleted ? 204 : 404);    }
+        $author->books()->detach();
+
+        return response('', $isDeleted ? 204 : 404);
+    }
 }

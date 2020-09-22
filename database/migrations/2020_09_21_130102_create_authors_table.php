@@ -20,6 +20,7 @@ class CreateAuthorsTable extends Migration
             $table->string('patronymic')->nullable();
             $table->year('birth_year');
             $table->year('death_year')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
