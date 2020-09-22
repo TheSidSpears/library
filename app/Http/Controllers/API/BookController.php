@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Book as BookResource;
+use App\Http\Resources\BookCollection;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,9 +16,9 @@ class BookController extends Controller
      * Display a listing of the resource.
      *
      * @param  Request  $request
-     * @return Response
+     * @return BookCollection
      */
-    public function index(Request $request): Response
+    public function index(Request $request): BookCollection
     {
         $books = Book::query();
 
@@ -25,7 +26,7 @@ class BookController extends Controller
             $books->where('name', 'like', "%{$request->name}%");
         }
 
-        return response($books->simplePaginate(3));
+        return new BookCollection($books->simplePaginate(3));
     }
 
     /**

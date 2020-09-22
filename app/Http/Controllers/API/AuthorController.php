@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,9 +16,9 @@ class AuthorController extends Controller
      * Display a listing of the resource.
      *
      * @param  Request  $request  $request
-     * @return Response
+     * @return ResourceCollection
      */
-    public function index(Request $request): Response
+    public function index(Request $request): ResourceCollection
     {
         $authors = Author::query();
 
@@ -24,7 +26,7 @@ class AuthorController extends Controller
             $authors->where('name', 'like', "%{$request->name}%");
         }
 
-        return response($authors->simplePaginate(3));
+        return new ResourceCollection($authors->simplePaginate(3));
     }
 
     /**
