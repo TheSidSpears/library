@@ -15,7 +15,8 @@ class Author extends JsonResource
     public function toArray($request)
     {
         $author = parent::toArray($request);
-        return array_merge($author,[
+
+        return array_merge($author, [
             'books_count' => $this->books()->count()
         ]);
     }

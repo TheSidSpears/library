@@ -50,12 +50,14 @@ class AuthorController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response(['message' => $validator->errors()]);
+            $response = response(['message' => $validator->errors()]);
+        } else {
+            $author->fill($data)->saveOrFail();
+
+            $response = response('', 201);
         }
 
-        $author->fill($data)->saveOrFail();
-
-        return response('', 201);
+        return $response;
     }
 
     /**
@@ -90,12 +92,14 @@ class AuthorController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response(['message' => $validator->errors()]);
+            $response = response(['message' => $validator->errors()]);
+        } else {
+            $author->fill($data)->saveOrFail();
+
+            $response = response('', 204);
         }
 
-        $author->fill($data)->saveOrFail();
-
-        return response('', 204);
+        return $response;
     }
 
     /**
@@ -107,8 +111,8 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author): Response
     {
-        $isDeleted = $author->delete();
         $author->books()->detach();
+        $isDeleted = $author->delete();
 
         return response('', $isDeleted ? 204 : 404);
     }
