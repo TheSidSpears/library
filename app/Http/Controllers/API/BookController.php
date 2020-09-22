@@ -26,7 +26,7 @@ class BookController extends Controller
             $books->where('name', 'like', "%{$request->name}%");
         }
 
-        return new BookCollection($books->simplePaginate(3));
+        return new BookCollection($books->simplePaginate(config('api.pagination_size')));
     }
 
     /**

@@ -26,7 +26,7 @@ class AuthorController extends Controller
             $authors->where('name', 'like', "%{$request->name}%");
         }
 
-        return new AuthorCollection($authors->simplePaginate(3));
+        return new AuthorCollection($authors->simplePaginate(config('api.pagination_size')));
     }
 
     /**
