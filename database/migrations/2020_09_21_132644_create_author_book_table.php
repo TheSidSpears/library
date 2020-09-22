@@ -13,10 +13,10 @@ class CreateAuthorBookTable extends Migration
      */
     public function up()
     {
-        Schema::create('author_book_table', function (Blueprint $table) {
+        Schema::create('author_book', function (Blueprint $table) {
             $table->integer('author_id');
             $table->integer('book_id');
-            $table->timestamps();
+//            $table->timestamps(); // todo для упрощения пока убрал, но лучше конечно с ними
         });
     }
 
@@ -27,6 +27,6 @@ class CreateAuthorBookTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('author_book_table');
+        Schema::dropIfExists('author_book');
     }
 }
