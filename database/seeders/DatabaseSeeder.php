@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,16 +25,9 @@ class DatabaseSeeder extends Seeder
         $books = Book::query()->select(['id'])->get();
         $authors = Author::query()->select(['id'])->get();
 
-        $setRandomAuthor = function ($book) use ($authors, &$data) {
-            $data[] = [
-                'book_id'   => $book->id,
-                'author_id' => $authors->random()->id
-            ];
-        };
-
-        $books->each($setRandomAuthor);
-        $books->random(3)->each($setRandomAuthor);
-
-        DB::table('author_book')->insert($data);
+        $books->each(function (Book $book) use ($authors) {
+            $authorsCount = random_int(1, 2);
+            $book->authors()->attach($authors->random($authorsCount));
+        });
     }
 }
