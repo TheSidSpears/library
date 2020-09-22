@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Author as AuthorResource;
 use App\Http\Resources\AuthorCollection;
 use App\Models\Author;
 use Illuminate\Http\Request;
@@ -61,11 +62,11 @@ class AuthorController extends Controller
      * Display the specified resource.
      *
      * @param  Author  $author
-     * @return Response
+     * @return AuthorResource
      */
-    public function show(Author $author): Response
+    public function show(Author $author): AuthorResource
     {
-        return response($author);
+        return new AuthorResource($author);
     }
 
     /**
