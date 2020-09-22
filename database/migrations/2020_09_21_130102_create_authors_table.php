@@ -17,7 +17,7 @@ class CreateAuthorsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('second_name');
-            $table->string('patronymic');
+            $table->string('patronymic')->nullable();
             $table->year('birth_year');
             $table->year('death_year')->nullable();
             $table->timestamps();

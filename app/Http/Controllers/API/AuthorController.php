@@ -3,28 +3,28 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class BookController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  Request  $request
+     * @param  Request  $request  $request
      * @return Response
      */
     public function index(Request $request): Response
     {
-        $books = Book::query();
+        $authors = Author::query();
 
         if ($request->name) {
-            $books->where('name', 'like', "%{$request->name}%");
+            $authors->where('name', 'like', "%{$request->name}%");
         }
 
-        return response($books->simplePaginate(3));
+        return response($authors->simplePaginate(3));
     }
 
     /**
@@ -36,20 +36,22 @@ class BookController extends Controller
      */
     public function store(Request $request): Response
     {
-        $book = new Book();
-        $data = $request->only($book->getFillable());
+        $author = new Author();
+        $data = $request->only($author->getFillable());
 
         $validator = Validator::make($data, [
-            'name'         => 'required|max:255',
-            'description'  => 'required|max:2000',
-            'publish_year' => 'required|date_format:Y',
+            'name'        => 'required|max:255',
+            'second_name' => 'required|max:255',
+            'patronymic'  => 'max:255',
+            'birth_year'  => 'required|date_format:Y',
+            'death_year'  => 'date_format:Y',
         ]);
 
         if ($validator->fails()) {
             return response(['message' => $validator->errors()]);
         }
 
-        $book->fill($data)->saveOrFail();
+        $author->fill($data)->saveOrFail();
 
         return response('', 201);
     }
@@ -57,37 +59,39 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Book  $book
+     * @param  Author  $author
      * @return Response
      */
-    public function show(Book $book): Response
+    public function show(Author $author): Response
     {
-        return response($book);
+        return response($author);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
-     * @param  Book  $book
+     * @param  Author  $author
      * @return Response
      * @throws \Throwable
      */
-    public function update(Request $request, Book $book): Response
+    public function update(Request $request, Author $author): Response
     {
-        $data = $request->only($book->getFillable());
+        $data = $request->only($author->getFillable());
 
         $validator = Validator::make($data, [
-            'name'         => 'max:255',
-            'description'  => 'max:2000',
-            'publish_year' => 'date_format:Y',
+            'name'        => 'max:255',
+            'second_name' => 'max:255',
+            'patronymic'  => 'nullable|max:255',
+            'birth_year'  => 'date_format:Y',
+            'death_year'  => 'nullable|date_format:Y',
         ]);
 
         if ($validator->fails()) {
             return response(['message' => $validator->errors()]);
         }
 
-        $book->fill($data)->saveOrFail();
+        $author->fill($data)->saveOrFail();
 
         return response('', 204);
     }
@@ -95,15 +99,14 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Book  $book
+     * @param  Author  $author
      * @return Response
      * @throws \Exception
      */
-    public function destroy(Book $book)
+    public function destroy(Author $author): Response
     {
-        // todo так же удалять связи с авторами
+        // todo так же удалять связи с книгами
         // todo можно сделать soft_delete
-        $isDeleted = $book->delete();
-        return response('', $isDeleted ? 204 : 404);
-    }
+        $isDeleted = $author->delete();
+        return response('', $isDeleted ? 204 : 404);    }
 }

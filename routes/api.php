@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthorController;
 use App\Http\Controllers\API\BookController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('api')->group(function () {
     Route::apiResources([
-//        'authors' => AuthorController::class,
+        'authors' => AuthorController::class,
         'books' => BookController::class,
     ]);
 }

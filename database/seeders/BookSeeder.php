@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Book;
 use Illuminate\Database\Seeder;
 
+// todo удалить, если не будет использоваться
 class BookSeeder extends Seeder
 {
     /**
