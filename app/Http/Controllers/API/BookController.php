@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Book as BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -58,11 +59,11 @@ class BookController extends Controller
      * Display the specified resource.
      *
      * @param  Book  $book
-     * @return Response
+     * @return BookResource
      */
-    public function show(Book $book): Response
+    public function show(Book $book): BookResource
     {
-        return response($book);
+        return new BookResource($book);
     }
 
     /**
